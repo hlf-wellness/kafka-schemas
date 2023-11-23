@@ -1,0 +1,23 @@
+parameters:
+  - name: schemaDefinitionJsonFile
+
+name: $(date:yyyyMMdd)$(rev:.r) - $(build.sourceBranch) - ${{ replace(replace(parameters.schemaDefinitionJsonFile,'/','_'),'\','_') }}
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: kafka-sharedTemplates
+      name: hn-gtsdevops/kafka-sharedTemplates
+      endpoint: hn-gtsdevops
+      type: github
+
+    - repository: common-sharedTemplates
+      name: hn-gtsdevops/common-sharedTemplates
+      endpoint: hn-gtsdevops
+      type: github
+
+extends: 
+  template: /extension/kafka/deploy-kafka-schema.yml@kafka-sharedTemplates
+  parameters:
+    jsonFile: ${{ parameters.schemaDefinitionJsonFile }}
